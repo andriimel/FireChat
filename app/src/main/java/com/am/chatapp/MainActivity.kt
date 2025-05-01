@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.am.chatapp.presentation.navigation.NavGraph
 import com.am.chatapp.ui.theme.ChatAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,8 +21,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ChatAppTheme {
-
-
+                val navController = rememberNavController()
+                NavGraph(navController)
             }
         }
     }
