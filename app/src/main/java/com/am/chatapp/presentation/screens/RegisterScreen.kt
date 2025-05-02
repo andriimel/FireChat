@@ -1,7 +1,7 @@
-package com.am.chatapp.presentation
+package com.am.chatapp.presentation.screens
 
 
-import android.R.attr.orientation
+
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,6 +20,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.am.chatapp.ui.theme.btnBackgroundColor
+import com.am.chatapp.ui.theme.mainTextColor
+import com.am.chatapp.ui.theme.textfieldBorderColor
+import com.am.chatapp.ui.theme.textfieldTextColor
+
 
 @Composable
 fun RegisterScreen( navController: NavController) {
@@ -40,8 +45,8 @@ fun RegisterScreen( navController: NavController) {
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 
-    val borderColor = Color(0xFFC0BFC1)
-    val textColor = Color(0xFFC0BFC1)
+
+
 
 
 
@@ -59,20 +64,20 @@ fun RegisterScreen( navController: NavController) {
                 text = "Register",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF121011)
+                color = mainTextColor
             )
 
             Spacer(modifier = Modifier.height(topPadding))
             OutlinedTextField(
                 value = email.value,
                 onValueChange = { email.value = it },
-                label = { Text("Email", color = textColor) },
+                label = { Text("Email", color = textfieldTextColor) },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = borderColor,
-                    unfocusedBorderColor = borderColor,
-                    cursorColor = textColor
+                    focusedBorderColor = textfieldBorderColor,
+                    unfocusedBorderColor = textfieldBorderColor,
+                    cursorColor = textfieldTextColor
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -84,13 +89,13 @@ fun RegisterScreen( navController: NavController) {
             OutlinedTextField(
                 value = password.value,
                 onValueChange = { password.value = it },
-                label = { Text("Password", color = textColor) },
+                label = { Text("Password", color = textfieldTextColor) },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = borderColor,
-                    unfocusedBorderColor = borderColor,
-                    cursorColor = textColor
+                    focusedBorderColor = textfieldBorderColor,
+                    unfocusedBorderColor = textfieldBorderColor,
+                    cursorColor = textfieldTextColor
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -106,7 +111,7 @@ fun RegisterScreen( navController: NavController) {
                     .height(56.dp),
                 colors = ButtonDefaults.buttonColors(
                     contentColor = Color.White,
-                    containerColor = Color(0xFFA8A8A7)
+                    containerColor = btnBackgroundColor
                 ),
                 shape = RoundedCornerShape(12.dp)
             ) {
@@ -123,7 +128,7 @@ fun RegisterScreen( navController: NavController) {
             ) {
                 Text(
                     text = "Have an account? Log in",
-                    color = Color(0xFF121011),
+                    color = mainTextColor,
                     textAlign = TextAlign.Center,
                     fontSize = 20.sp,
                     modifier = Modifier.fillMaxWidth()

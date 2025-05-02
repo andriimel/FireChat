@@ -4,10 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.am.chatapp.presentation.LoginScreen
-import com.am.chatapp.presentation.RegisterScreen
-import com.am.chatapp.presentation.SplashScreen
-import com.am.chatapp.presentation.Screen
+import com.am.chatapp.presentation.screens.LoginScreen
+import com.am.chatapp.presentation.screens.ProfileScreen
+import com.am.chatapp.presentation.screens.RegisterScreen
+import com.am.chatapp.presentation.screens.SplashScreen
+import com.am.chatapp.presentation.screens.Screen
 
 @Composable
 fun NavGraph(navController: NavHostController) {
@@ -26,6 +27,10 @@ fun NavGraph(navController: NavHostController) {
 
         composable(Screen.Register.route) {
             RegisterScreen(navController = navController)
+        }
+
+        composable(Screen.Profile.route) {
+            ProfileScreen(navController = navController)
         }
     }
 }
