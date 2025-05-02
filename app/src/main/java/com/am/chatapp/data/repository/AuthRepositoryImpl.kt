@@ -3,9 +3,13 @@ package com.am.chatapp.data.repository
 import com.am.chatapp.domain.repository.AuthRepository
 import com.am.chatapp.domain.repository.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
-class AuthRepositoryImpl (
+class AuthRepositoryImpl @Inject  constructor (
     private val firebaseAuth: FirebaseAuth
 ) : AuthRepository{
     override suspend fun register(email: String, password: String): AuthResult {

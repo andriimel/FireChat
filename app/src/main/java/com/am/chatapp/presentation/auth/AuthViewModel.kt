@@ -5,11 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.am.chatapp.domain.repository.AuthResult
 import com.am.chatapp.domain.use_cases.LoginUser
 import com.am.chatapp.domain.use_cases.RegisterUser
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AuthViewModel(
+@HiltViewModel
+class AuthViewModel @Inject constructor(
     private val registerUser: RegisterUser,
     private val loginUser: LoginUser   
 ) : ViewModel() {
