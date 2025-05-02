@@ -145,6 +145,7 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
 
 
             Spacer(modifier = Modifier.height(buttonSpacing))
+
             LaunchedEffect(authResult) {
                 if (authResult is AuthResult.Error || authResult is AuthResult.Success) {
                     showDialog = true

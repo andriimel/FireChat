@@ -20,10 +20,14 @@ class AuthViewModel @Inject constructor(
     private val _authResult = MutableStateFlow<AuthResult>(AuthResult.Idle)
     val authResult: StateFlow<AuthResult> get() = _authResult
 
+    private val _isLoggedIn = MutableStateFlow(false) // Для відслідковування статусу входу
+    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
+
     fun registerUserEmailPassword(email: String, password: String) {
         viewModelScope.launch {
             val result = registerUser(email, password)
             _authResult.value = result
+
         }
     }
 
@@ -31,6 +35,9 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             val result = loginUser(email, password)
             _authResult.value = result
+            if (result is AuthResult.Success){
+                _isLoggedIn.value = true
+            }
         }
     }
     fun resetAuthResult() {
