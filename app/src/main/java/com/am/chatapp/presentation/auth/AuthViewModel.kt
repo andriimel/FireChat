@@ -17,7 +17,7 @@ class AuthViewModel @Inject constructor(
     private val loginUser: LoginUser   
 ) : ViewModel() {
 
-    private val _authResult = MutableStateFlow<AuthResult>(AuthResult.Loading)
+    private val _authResult = MutableStateFlow<AuthResult>(AuthResult.Idle)
     val authResult: StateFlow<AuthResult> get() = _authResult
 
     fun registerUserEmailPassword(email: String, password: String) {
@@ -32,5 +32,8 @@ class AuthViewModel @Inject constructor(
             val result = loginUser(email, password)
             _authResult.value = result
         }
+    }
+    fun resetAuthResult() {
+        _authResult.value = AuthResult.Idle
     }
 }

@@ -50,7 +50,6 @@ fun LoginScreen(navController: NavController) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-
         Text(
             text = "Log in",
             fontSize = 32.sp,
@@ -58,7 +57,6 @@ fun LoginScreen(navController: NavController) {
             fontWeight = FontWeight.Bold,
             color = mainTextColor
         )
-
         Spacer(modifier = Modifier.height(topPadding))
         OutlinedTextField(
             value = email.value,
@@ -110,7 +108,6 @@ fun LoginScreen(navController: NavController) {
         ) {
             Text("LOG IN", fontSize = 24.sp)
         }
-
         //
         TextButton(
             onClick = { navController.navigate(Screen.Register.route) },

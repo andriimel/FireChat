@@ -27,6 +27,7 @@ import com.am.chatapp.ui.theme.mainTextColor
 import com.am.chatapp.ui.theme.textfieldBorderColor
 import com.am.chatapp.ui.theme.textfieldTextColor
 import androidx.compose.runtime.*
+import androidx.compose.ui.text.TextStyle
 import com.am.chatapp.domain.repository.AuthResult
 
 
@@ -48,26 +49,10 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
     val textButtonSpacing = screenHeight * 0.06f
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
+    val confirmPassword = remember { mutableStateOf("") }
 
     val authResult by authViewModel.authResult.collectAsState()
-
-
-        when(authResult){
-            is AuthResult.Loading->{
-                CircularProgressIndicator()
-            }
-            is AuthResult.Success -> {
-                Text("Success: ${(authResult as AuthResult.Success).message}")
-            }
-            is AuthResult.Error -> {
-                Text("Error: ${(authResult as AuthResult.Error).message}", color = Color.Red)
-            }
-            else -> {
-                // Default state
-            }
-        }
-
-
+    var showDialog by remember { mutableStateOf(false) }
 
         Column(
             modifier = Modifier
@@ -91,6 +76,7 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
                 value = email.value,
                 onValueChange = { email.value = it },
                 label = { Text("Email", color = textfieldTextColor) },
+
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -100,7 +86,7 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+
             )
 
             Spacer(modifier = Modifier.height(fieldSpacing))
@@ -118,13 +104,13 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+
             )
             Spacer(modifier = Modifier.height(fieldSpacing))
 
             OutlinedTextField(
-                value = password.value,
-                onValueChange = { password.value = it },
+                value = confirmPassword.value,
+                onValueChange = { confirmPassword.value = it },
                 label = { Text("Confirm password", color = textfieldTextColor) },
                 singleLine = true,
                 shape = RoundedCornerShape(12.dp),
@@ -135,7 +121,7 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+
             )
 
             Spacer(modifier = Modifier.height(buttonSpacing))
@@ -143,6 +129,7 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
             Button(
                 onClick = {
                     authViewModel.registerUserEmailPassword(email.value,password.value)
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -156,8 +143,21 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
                 Text("SIGN UP", fontSize = 24.sp)
             }
 
-            Spacer(modifier = Modifier.height(buttonSpacing))
 
+            Spacer(modifier = Modifier.height(buttonSpacing))
+            LaunchedEffect(authResult) {
+                if (authResult is AuthResult.Error || authResult is AuthResult.Success) {
+                    showDialog = true
+                }
+            }
+
+            ShowAuthResultDialog(
+                showDialog = showDialog,
+                authResult = authResult,
+                onDismiss = { showDialog = false
+                    authViewModel.resetAuthResult()
+                }
+            )
             // TextButton
             TextButton(
                 onClick = { navController.navigate(Screen.Login.route) },
@@ -175,7 +175,15 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
 
             Spacer(modifier = Modifier.height(textButtonSpacing))
         }
-    }
+
+//    when (val result = authResult) {
+//        is AuthResult.Loading -> CircularProgressIndicator()
+//        is AuthResult.Success -> Text("Success: ${result.message}")
+//        is AuthResult.Error ->  ShowAuthResultDialog(showDialog,result) {}
+//
+//        AuthResult.Idle -> {}
+//    }
+}
 
 
 
