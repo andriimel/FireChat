@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.am.chatapp.presentation.auth.AuthViewModel
 import com.am.chatapp.presentation.screens.LoginScreen
 import com.am.chatapp.presentation.screens.ProfileScreen
 import com.am.chatapp.presentation.screens.RegisterScreen
@@ -11,7 +12,7 @@ import com.am.chatapp.presentation.screens.SplashScreen
 import com.am.chatapp.presentation.screens.Screen
 
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun NavGraph(navController: NavHostController, authViewModel: AuthViewModel) {
     NavHost(navController = navController, startDestination = Screen.Splash.route) {
         composable(Screen.Splash.route) {
             SplashScreen(onNavigateNext = {
@@ -26,7 +27,7 @@ fun NavGraph(navController: NavHostController) {
         }
 
         composable(Screen.Register.route) {
-            RegisterScreen(navController = navController)
+            RegisterScreen(navController = navController, authViewModel)
         }
 
         composable(Screen.Profile.route) {

@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     //private val viewModel: AuthViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,7 +30,7 @@ class MainActivity : ComponentActivity() {
             ChatAppTheme {
                 val navController = rememberNavController()
                 val viewModel = hiltViewModel<AuthViewModel>()
-                NavGraph(navController)
+                NavGraph(navController, viewModel)
             }
         }
     }
