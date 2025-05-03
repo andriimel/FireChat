@@ -47,12 +47,28 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
     val fieldSpacing = screenHeight * 0.03f
     val buttonSpacing = screenHeight * 0.05f
     val textButtonSpacing = screenHeight * 0.06f
+
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val confirmPassword = remember { mutableStateOf("") }
+    val nickname = remember { mutableStateOf("") }
 
     val authResult by authViewModel.authResult.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(authResult) {
+        if (authResult is AuthResult.Error || authResult is AuthResult.Success) {
+            showDialog = true
+        }
+    }
+
+    ShowAuthResultDialog(
+        showDialog = showDialog,
+        authResult = authResult,
+        onDismiss = { showDialog = false
+            authViewModel.resetAuthResult()
+        }
+    )
 
         Column(
             modifier = Modifier
@@ -71,7 +87,7 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
                 color = mainTextColor
             )
 
-            Spacer(modifier = Modifier.height(topPadding))
+            Spacer(modifier = Modifier.height(fieldSpacing))
             OutlinedTextField(
                 value = email.value,
                 onValueChange = { email.value = it },
@@ -123,12 +139,28 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
                     .fillMaxWidth()
 
             )
+            Spacer(modifier = Modifier.height(fieldSpacing))
+            OutlinedTextField(
+                value = nickname.value,
+                onValueChange = { nickname.value = it },
+                label = { Text("Username", color = textfieldTextColor) },
 
+                singleLine = true,
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = textfieldBorderColor,
+                    unfocusedBorderColor = textfieldBorderColor,
+                    cursorColor = textfieldTextColor
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+
+            )
             Spacer(modifier = Modifier.height(buttonSpacing))
 
             Button(
                 onClick = {
-                    authViewModel.registerUserEmailPassword(email.value,password.value)
+                    authViewModel.registerUserEmailPassword(email.value,password.value, confirmPassword.value, nickname.value)
 
                 },
                 modifier = Modifier
@@ -143,22 +175,9 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
                 Text("SIGN UP", fontSize = 24.sp)
             }
 
-
             Spacer(modifier = Modifier.height(buttonSpacing))
 
-            LaunchedEffect(authResult) {
-                if (authResult is AuthResult.Error || authResult is AuthResult.Success) {
-                    showDialog = true
-                }
-            }
 
-            ShowAuthResultDialog(
-                showDialog = showDialog,
-                authResult = authResult,
-                onDismiss = { showDialog = false
-                    authViewModel.resetAuthResult()
-                }
-            )
             // TextButton
             TextButton(
                 onClick = { navController.navigate(Screen.Login.route) },
@@ -177,13 +196,6 @@ fun RegisterScreen( navController: NavController, authViewModel: AuthViewModel) 
             Spacer(modifier = Modifier.height(textButtonSpacing))
         }
 
-//    when (val result = authResult) {
-//        is AuthResult.Loading -> CircularProgressIndicator()
-//        is AuthResult.Success -> Text("Success: ${result.message}")
-//        is AuthResult.Error ->  ShowAuthResultDialog(showDialog,result) {}
-//
-//        AuthResult.Idle -> {}
-//    }
 }
 
 

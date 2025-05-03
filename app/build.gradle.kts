@@ -62,6 +62,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation ("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore")
 
     // Dagger hilt
     implementation("com.google.dagger:hilt-android:2.56.1")

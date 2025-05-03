@@ -41,7 +41,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
     val topPadding = if (isPortrait) screenHeight * 0.15f else screenHeight * 0.05f
     val fieldSpacing = screenHeight * 0.03f
     val buttonSpacing = screenHeight * 0.05f
-    val textButtonSpacing = screenHeight * 0.06f
+
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
 

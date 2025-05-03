@@ -20,12 +20,23 @@ class AuthViewModel @Inject constructor(
     private val _authResult = MutableStateFlow<AuthResult>(AuthResult.Idle)
     val authResult: StateFlow<AuthResult> get() = _authResult
 
-    private val _isLoggedIn = MutableStateFlow(false) // Для відслідковування статусу входу
+    private val _isLoggedIn = MutableStateFlow(false) // log in status
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
 
-    fun registerUserEmailPassword(email: String, password: String) {
+    fun registerUserEmailPassword(email: String, password: String, confirmationPassword: String, nickname: String) {
+
+        if (confirmationPassword != password) {
+            _authResult.value = AuthResult.Error("Password do not match")
+            return
+
+        }
+        if (nickname.isBlank()){
+            _authResult.value = AuthResult.Error("Pls input username !!!")
+            return
+
+        }
         viewModelScope.launch {
-            val result = registerUser(email, password)
+            val result = registerUser(email, password, nickname)
             _authResult.value = result
 
         }
