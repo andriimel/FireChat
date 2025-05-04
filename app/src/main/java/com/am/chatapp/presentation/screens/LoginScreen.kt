@@ -51,7 +51,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
 
     LaunchedEffect(isLoggedIn) {
         if (isLoggedIn){
-            navController.navigate("register")
+            navController.navigate("profile")
         }
     }
 

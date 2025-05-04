@@ -2,6 +2,7 @@ package com.am.chatapp.presentation.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.am.chatapp.data.local.SessionManager
 import com.am.chatapp.domain.repository.AuthResult
 import com.am.chatapp.domain.use_cases.LoginUser
 import com.am.chatapp.domain.use_cases.RegisterUser
@@ -14,14 +15,25 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val registerUser: RegisterUser,
-    private val loginUser: LoginUser   
+    private val loginUser: LoginUser,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _authResult = MutableStateFlow<AuthResult>(AuthResult.Idle)
     val authResult: StateFlow<AuthResult> get() = _authResult
 
-    private val _isLoggedIn = MutableStateFlow(false) // log in status
+    private val _isLoggedIn = MutableStateFlow(sessionManager.isLoggedIn()) // log in status
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
+
+    private val _authState = MutableStateFlow<AuthState>(AuthState.Loading)
+    val authState : StateFlow<AuthState> = _authState
+
+    init {
+        viewModelScope.launch {
+            val loggedIn = sessionManager.isLoggedIn()
+            _authState.value = if (loggedIn) AuthState.LoggedIn else AuthState.LoggedOut
+        }
+    }
 
     fun registerUserEmailPassword(email: String, password: String, confirmationPassword: String, nickname: String) {
 
@@ -31,7 +43,7 @@ class AuthViewModel @Inject constructor(
 
         }
         if (nickname.isBlank()){
-            _authResult.value = AuthResult.Error("Pls input username !!!")
+            _authResult.value = AuthResult.Error("Please input username !!!")
             return
 
         }
@@ -47,9 +59,18 @@ class AuthViewModel @Inject constructor(
             val result = loginUser(email, password)
             _authResult.value = result
             if (result is AuthResult.Success){
+                sessionManager.setLoggedIn(true)
+                _authState.value = AuthState.LoggedIn
                 _isLoggedIn.value = true
+
             }
         }
+    }
+
+    fun logOutUser(){
+        sessionManager.setLoggedIn(false)
+        _isLoggedIn.value = false
+        _authState.value = AuthState.LoggedOut
     }
     fun resetAuthResult() {
         _authResult.value = AuthResult.Idle
