@@ -2,9 +2,13 @@ package com.am.chatapp.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.am.chatapp.chat.screen.ChatScreen
+import com.am.chatapp.chat.viewmodel.ChatViewModel
 import com.am.chatapp.presentation.auth.AuthState
 import com.am.chatapp.presentation.auth.AuthViewModel
 import com.am.chatapp.presentation.screens.LoginScreen
@@ -26,7 +30,7 @@ fun NavGraph(navController: NavHostController, authViewModel: AuthViewModel) {
                     }
                     else -> {
                         if (authViewModel.isLoggedIn.value) {
-                            navController.navigate(Screen.Profile.route) {
+                            navController.navigate(Screen.GroupChat.route) {
                                 popUpTo(Screen.Splash.route) { inclusive = true }
                             }
                         } else {
@@ -49,6 +53,14 @@ fun NavGraph(navController: NavHostController, authViewModel: AuthViewModel) {
 
         composable(Screen.Profile.route) {
             ProfileScreen(navController = navController)
+        }
+
+        composable (Screen.GroupChat.route){
+            val chatViewModel: ChatViewModel = hiltViewModel()
+            ChatScreen(
+                navController = navController,
+                viewModel  = chatViewModel // передаємо ViewModel
+            )
         }
     }
 }

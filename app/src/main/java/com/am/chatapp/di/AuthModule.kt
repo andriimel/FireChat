@@ -2,6 +2,8 @@ package com.am.chatapp.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.am.chatapp.chat.repository.ChatRepository
+import com.am.chatapp.chat.repository.ChatRepositoryImpl
 import com.am.chatapp.data.repository.AuthRepositoryImpl
 import com.am.chatapp.domain.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -54,5 +56,15 @@ object SharedPreferencesModule {
     @Provides
     fun provideSharedPreferences(context: Context): SharedPreferences {
         return context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+    }
+}
+@Module
+@InstallIn(SingletonComponent::class)
+object ChatModule {
+
+    @Provides
+    @Singleton
+    fun provideChatRepository(firestore: FirebaseFirestore): ChatRepository {
+        return ChatRepositoryImpl(firestore)
     }
 }
