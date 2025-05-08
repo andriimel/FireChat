@@ -5,19 +5,22 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.sp
@@ -25,20 +28,57 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.am.chatapp.chat.model.Message
 import com.am.chatapp.chat.viewmodel.ChatViewModel
-import com.google.firebase.auth.FirebaseAuth
+import com.am.chatapp.presentation.auth.AuthViewModel
+import com.am.chatapp.presentation.screens.Screen
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+@OptIn(
+    ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(navController: NavController,
-    viewModel: ChatViewModel = viewModel()
+fun ChatTopBar(onLogoutClick: () -> Unit) {
+
+    TopAppBar(
+        title = {
+            Text(text = "Chat App")
+        },
+        actions = {
+
+            IconButton(onClick = { onLogoutClick() }) {
+                Icon(imageVector = Icons.Default.ExitToApp, contentDescription = "Logout")
+            }
+        },
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+@Composable
+fun ChatScreen(
+    navController: NavController,
+    viewModel: ChatViewModel = viewModel(),
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
     val messages = viewModel.messages.collectAsState(initial = emptyList()).value
     var textState by remember { mutableStateOf(TextFieldValue("")) }
+    val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
 
+
+    LaunchedEffect(isLoggedIn) {
+        if (!isLoggedIn) {
+            navController.navigate(Screen.Login.route) {
+                popUpTo(Screen.GroupChat.route) { inclusive = true }
+            }
+        }
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
+        ChatTopBar(onLogoutClick = {
+            authViewModel.logOutUser()
+            navController.navigate(Screen.Login.route) {
+                popUpTo(Screen.GroupChat.route) { inclusive = true }
+            }
+
+        })
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
@@ -77,20 +117,25 @@ fun ChatScreen(navController: NavController,
     }
 }
 
+
 @Composable
 fun MessageItem(message: Message, isCurrentUser: Boolean) {
-    Row(
+
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
-        horizontalArrangement = if (isCurrentUser) Arrangement.End else Arrangement.Start
+        horizontalAlignment = if (isCurrentUser) Alignment.End else Alignment.Start
     ) {
-        Text(
-            text = if (isCurrentUser) "You" else message.senderName,
-            fontSize = 12.sp,
-            color = Color.Gray,
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
+
+            Text(
+                text = if (isCurrentUser) "You" else message.senderName.ifEmpty { "Anonymous" },
+                fontSize = 14.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(bottom = 2.dp)
+            )
+
+
         Box(
             modifier = Modifier
                 .background(

@@ -51,15 +51,22 @@ fun NavGraph(navController: NavHostController, authViewModel: AuthViewModel) {
             RegisterScreen(navController = navController, authViewModel)
         }
 
-        composable(Screen.Profile.route) {
-            ProfileScreen(navController = navController)
-        }
+//        composable(Screen.Profile.route) {
+//            ProfileScreen(navController = navController)
+//        }
 
         composable (Screen.GroupChat.route){
             val chatViewModel: ChatViewModel = hiltViewModel()
             ChatScreen(
                 navController = navController,
-                viewModel  = chatViewModel // передаємо ViewModel
+                viewModel = chatViewModel,
+                authViewModel = authViewModel,
+                onLogoutClick = {
+                    authViewModel.logOutUser()
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.GroupChat.route) { inclusive = true }
+                    }
+                }
             )
         }
     }

@@ -26,7 +26,7 @@ class AuthViewModel @Inject constructor(
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
 
     private val _authState = MutableStateFlow<AuthState>(AuthState.Loading)
-    val authState : StateFlow<AuthState> = _authState
+
 
     init {
         viewModelScope.launch {
@@ -71,6 +71,7 @@ class AuthViewModel @Inject constructor(
         sessionManager.setLoggedIn(false)
         _isLoggedIn.value = false
         _authState.value = AuthState.LoggedOut
+        _authResult.value = AuthResult.Idle
     }
     fun resetAuthResult() {
         _authResult.value = AuthResult.Idle

@@ -51,7 +51,10 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
 
     LaunchedEffect(isLoggedIn) {
         if (isLoggedIn){
-            navController.navigate("profile")
+            navController.navigate("group_chat_screen"){
+                popUpTo(Screen.Login.route) { inclusive = true }
+            }
+
         }
     }
 

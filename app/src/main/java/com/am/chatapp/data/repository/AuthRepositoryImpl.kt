@@ -1,5 +1,6 @@
 package com.am.chatapp.data.repository
 
+import android.util.Log
 import com.am.chatapp.domain.repository.AuthRepository
 import com.am.chatapp.domain.repository.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -43,4 +44,14 @@ class AuthRepositoryImpl @Inject  constructor (
             AuthResult.Error("Login failed: ${e.message}")
         }
     }
+    override suspend fun logout(): AuthResult {
+        return try {
+            firebaseAuth.signOut()
+            AuthResult.Success("Logged out successfully")
+        } catch (e: Exception) {
+            AuthResult.Error("Logout failed: ${e.message}")
+        }
+    }
+
+
 }

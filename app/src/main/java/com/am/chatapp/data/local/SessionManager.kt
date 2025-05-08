@@ -11,6 +11,7 @@ class SessionManager @Inject constructor(private val sharedPreferences: SharedPr
     }
     fun setLoggedIn(isLoggedIn: Boolean) {
         sharedPreferences.edit().putBoolean(IS_LOGGED_IN,isLoggedIn).apply()
+
     }
     fun isLoggedIn(): Boolean{
         return sharedPreferences.getBoolean(IS_LOGGED_IN,false)
