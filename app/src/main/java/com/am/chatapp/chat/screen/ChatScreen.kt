@@ -21,7 +21,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -56,11 +58,14 @@ fun ChatTopBar(onLogoutClick: () -> Unit) {
 fun ChatScreen(
     navController: NavController,
     viewModel: ChatViewModel = viewModel(),
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = hiltViewModel(),
+    onLogoutClick: () -> Unit
+
 ) {
     val messages = viewModel.messages.collectAsState(initial = emptyList()).value
     var textState by remember { mutableStateOf(TextFieldValue("")) }
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
 
     LaunchedEffect(isLoggedIn) {
@@ -101,7 +106,13 @@ fun ChatScreen(
             TextField(
                 value = textState,
                 onValueChange = { textState = it },
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f)
+                    .onFocusChanged{
+                        focusState ->
+                        if (focusState.isFocused) {
+                            keyboardController?.show()
+                        }
+                    },
                 placeholder = { Text("Enter message...") }
             )
             Spacer(modifier = Modifier.width(8.dp))

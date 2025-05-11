@@ -43,7 +43,6 @@ class ChatRepositoryImpl @Inject constructor(
 
     override fun listenForMessages(chatId: String, callback: (List<Message>) -> Unit) {
         chatCollection
-
             .document(chatId)
             .collection("messages")
             .orderBy("timestamp")
