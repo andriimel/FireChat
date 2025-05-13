@@ -17,9 +17,9 @@ class ChatRepositoryImpl @Inject constructor(
             val snapshot = firestore.collection("users").document(userId).get().await()
 
 
-            println("🔥 Document ID: $userId")
-            println("🔥 Document Data: ${snapshot.data}")
-            println("🔥 Nickname: ${snapshot.getString("nickname")}")
+            println(" Document ID: $userId")
+            println(" Document Data: ${snapshot.data}")
+            println(" Nickname: ${snapshot.getString("nickname")}")
 
             snapshot.getString("nickname") ?: ""
         } catch (e: Exception) {
